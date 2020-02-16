@@ -1,6 +1,10 @@
 # Arduino IRIG Timecode library
 IRIG Timecode encoding/decoding library for Arduino and STM32duino
 
+Support for both IRIG A and IRIG B, however the library does not support IRIG with year nor SBS in either IRIG A or IRIG B mode. 
+
+***Warning*** Some embedded processors could have trouble with IRIG A due to its 100 microsecond precision requirement, a >50MHz processor is recommended, however I have been able to rather easily generate valid IRIG A signals on an Arduino Uno 
+
 ## Documentation
 ### IRIG Timecode structure
 ```cpp
