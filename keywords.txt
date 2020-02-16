@@ -2,6 +2,8 @@ irig_time_t		KEYWORD1
 fixup			KEYWORD2
 uptime			KEYWORD2
 to_strn			KEYWORD2
+add_ms			KEYWORD2
+add_s			KEYWORD2
 
 IRIG_RX			KEYWORD1
 IRIG_TX			KEYWORD1

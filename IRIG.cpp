@@ -1,6 +1,6 @@
 #include "IRIG.h"
 
-#define __DEBUG_IRIG
+// #define __DEBUG_IRIG
 
 #ifdef __DEBUG_IRIG
 	#define _DBG_PRINT(s) Serial.print(s);
@@ -25,9 +25,6 @@ void to_bcd3(uint16_t dat, uint8_t* ones, uint8_t* tens, uint8_t* hdrs) {
 	while(dat > 99) { h++; dat -= 100; }
 	while(dat > 9) { t++; dat -= 10; }
 	*hdrs = h; *tens = t; *ones = dat;
-}
-uint8_t from_bcd(uint8_t bcd) {
-	return (bcd & 0xF) + 10 * (bcd >> 4);
 }
 
 /*  ________  __________   ____  _______________________    ________
@@ -56,6 +53,9 @@ IRIG_RX::IRIG_RX(uint8_t mode) {
 void IRIG_RX::begin(int16_t pin) {
 	this->pin = pin;
 	pinMode(pin, INPUT);
+}
+uint8_t from_bcd(uint8_t bcd) {
+	return (bcd & 0xF) + 10 * (bcd >> 4);
 }
 void IRIG_RX::process_buf(irig_time_t* into) {
 	into->secs = from_bcd(recv_buf[0]);
@@ -182,11 +182,11 @@ void IRIG_TX::send_nibble(uint8_t nibb) {
 	send_bit(nibb & 8);
 }
 inline void IRIG_TX::send_pos_ind() {
-	_DBG_PRINT("P  ");
+	_DBG_PRINT('P');
 	pulse(timeIA, timeIB);
 }
 inline void IRIG_TX::send_bit(uint8_t bit) {
-	_DBG_PRINT(bit ? "1  " : "0  ");
+	_DBG_PRINT(bit ? '1' : '0');
 	if(bit) pulse(time1A, time1B);
 	else pulse(time0A, time0B);
 }
@@ -223,4 +223,16 @@ void irig_time_t::uptime() {
 	secs = ms / 1000;
 	ms -= secs * 1000;
 	tenths_of_secs = ms / 100;
+}
+void irig_time_t::add_ms(uint32_t tdiff_ms) {
+	uint8_t amo = tdiff_ms % 100;
+	tenths_of_secs += amo / 10; tdiff_ms -= amo;
+	add_s(tdiff_ms / 1000);
+}
+void irig_time_t::add_s(uint32_t tdiff) {
+	day_of_year += tdiff / 86400;
+	hours += (tdiff % 86400) / 3600;
+	mins += (tdiff % 3600) / 60;
+	secs += tdiff % 60;
+	fixup();
 }

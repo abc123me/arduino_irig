@@ -4,12 +4,16 @@
 #include "Arduino.h"
 
 struct irig_time_t {
-	uint8_t secs, mins, hours;
-	uint16_t day_of_year;
-	uint8_t tenths_of_secs;
+	uint8_t secs = 0;
+	uint8_t mins = 0;
+	uint8_t hours = 0;
+	uint16_t day_of_year = 0;
+	uint8_t tenths_of_secs = 0;
 	
 	void fixup();
 	void uptime();
+	void add_ms(uint32_t tdiff_ms);
+	void add_s(uint32_t tdiff_s);
 	uint16_t to_strn(char* str, uint16_t n);
 };
 
