@@ -23,4 +23,4 @@ struct irig_time_t {
 #### Methods
 - `fixup()`: Called by `IRIG_TX::send`, makes sure time fields are in range
 - `uptime()`: Copies current system uptime into struct
-- `to_strn(char* str, uint16_t n)`: Copies the struct contents into string `str`, up to length `n`, returns actual length copied
+- `to_strn(char* str, uint16_t n)`: Copies contents into `str`, up to `n`, returns length
