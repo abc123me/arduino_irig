@@ -46,4 +46,4 @@ If an invalid mode is specified, it will default to `IRIG_B`
 - `begin(int16_t pin)`: Initialize input on `pin`, iterrupts not yet supported
 - `uint8_t recv(irig_time_t* into)`: Receives timecode into `into`, returns 1 on success, blocks until a specified timeout has been reached (frame_time * 3 * 10)
 
-*Please note* This library does not yet support interrupts, but you can still use them by attaching a RISING interrupt then immediately calling `recv`
+*Please note* This library does not yet support interrupts, but you can still use them by attaching a RISING interrupt to the receive pin then immediately calling `recv`
