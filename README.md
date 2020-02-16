@@ -28,6 +28,7 @@ struct irig_time_t {
 #### IRIG Modes
 0. `IRIG_A`
 1. `IRIG_B`
+
 If an invalid mode is specified, it will default to `IRIG_B`
 
 #### IRIG_TX
