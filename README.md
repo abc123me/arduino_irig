@@ -9,12 +9,16 @@ Support for both IRIG A and IRIG B, however the library does not support IRIG wi
 ## IRIG Timecode structure
 ```cpp
 struct irig_time_t {
-	uint8_t secs, mins, hours;
-	uint16_t day_of_year;
-	uint8_t tenths_of_secs;
+	uint8_t secs = 0;
+	uint8_t mins = 0;
+	uint8_t hours = 0;
+	uint16_t day_of_year = 0;
+	uint8_t tenths_of_secs = 0;
 	
 	void fixup();
 	void uptime();
+	void add_ms(uint32_t tdiff_ms);
+	void add_s(uint32_t tdiff_s);
 	uint16_t to_strn(char* str, uint16_t n);
 };
 ```
@@ -28,6 +32,7 @@ struct irig_time_t {
 - `fixup()`: Called by `IRIG_TX::send`, makes sure time fields are in range
 - `uptime()`: Copies current system uptime into struct
 - `to_strn(char* str, uint16_t n)`: Copies contents into `str`, up to `n`, returns length
+- `add_ms(uint32_t t) / add_s(uint32_t t)`: Adds a certain amount of time to the time struct
 
 ## IRIG Modes
 - `#define IRIG_A 0`: 1ms IRIG, frames should be sent every 100ms
