@@ -24,3 +24,19 @@ struct irig_time_t {
 - `fixup()`: Called by `IRIG_TX::send`, makes sure time fields are in range
 - `uptime()`: Copies current system uptime into struct
 - `to_strn(char* str, uint16_t n)`: Copies contents into `str`, up to `n`, returns length
+
+#### IRIG Modes
+0. `IRIG_A`
+1. `IRIG_B`
+If an invalid mode is specified, it will default to `IRIG_B`
+
+#### IRIG_TX
+- `IRIG_TX(uint8_t mode)`: Constructor for the `IRIG_TX` class, takes a mode listed above
+- `begin(int16_t pin)`: Initialize output on `pin`
+- `send(irig_time_t timecode)`: Sends the timecode
+- `uint16_t getSendRate()`: Gets the recommended interval in which to send timecodes
+
+#### IRIG_RX
+- `IRIG_RX(uint8_t mode)`: Constructor for the `IRIG_RX` class, takes a mode listed above
+- `begin(int16_t pin)`: Initialize input on `pin`, iterrupts not yet supported
+- `uint8_t recv(irig_time_t* into)`: Receives timecode into `into`, returns 1 on success
