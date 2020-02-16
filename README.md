@@ -44,4 +44,3 @@ struct irig_time_t {
 - `IRIG_RX(uint8_t mode)`: Constructor for the `IRIG_RX` class, takes a mode listed above
 - `begin(int16_t pin)`: Initialize input on `pin`, iterrupts not yet supported
 - `uint8_t recv(irig_time_t* into)`: Receives timecode into `into`, returns 1 on success, blocks until a specified timeout has been reached (frame_time * 3 * 10)
-- This library does not yet support interrupts, but it is planned in the future
