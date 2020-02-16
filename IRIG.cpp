@@ -26,6 +26,9 @@ void to_bcd3(uint16_t dat, uint8_t* ones, uint8_t* tens, uint8_t* hdrs) {
 	while(dat > 9) { t++; dat -= 10; }
 	*hdrs = h; *tens = t; *ones = dat;
 }
+uint8_t from_bcd(uint8_t bcd) {
+	return (bcd & 0xF) + 10 * (bcd >> 4);
+}
 
 /*  ________  __________   ____  _______________________    ________
    /  _/ __ \/  _/ ____/  / __ \/ ____/ ____/ ____/  _/ |  / / ____/
@@ -53,9 +56,6 @@ IRIG_RX::IRIG_RX(uint8_t mode) {
 void IRIG_RX::begin(int16_t pin) {
 	this->pin = pin;
 	pinMode(pin, INPUT);
-}
-uint8_t from_bcd(uint8_t bcd) {
-	return (bcd & 0xF) + 10 * (bcd >> 4);
 }
 void IRIG_RX::process_buf(irig_time_t* into) {
 	into->secs = from_bcd(recv_buf[0]);
