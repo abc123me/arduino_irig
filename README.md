@@ -30,8 +30,8 @@ struct irig_time_t {
 - `to_strn(char* str, uint16_t n)`: Copies contents into `str`, up to `n`, returns length
 
 ## IRIG Modes
-0. `IRIG_A`
-1. `IRIG_B`
+`#define IRIG_A 0` - 1ms IRIG, frames should be sent every 100ms
+`#define IRIG_B 1` - 10x slower version of IRIG, frames should be sent every 1 second, not accurate to the tenth of a second
 
 If an invalid mode is specified, it will default to `IRIG_B`
 
