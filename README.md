@@ -1,5 +1,5 @@
 # Arduino IRIG Timecode library
-IRIG Timecode encoding/decoding library for Arduino and STM32duino, IRIG has been implemented to the standards [here](https://en.wikipedia.org/wiki/IRIG_timecode}
+IRIG Timecode encoding/decoding library for Arduino and STM32duino, IRIG has been implemented to the standards [here](https://en.wikipedia.org/wiki/IRIG_timecode)
 
 Support for both IRIG A and IRIG B, however the library does not support IRIG with year nor SBS in either IRIG A or IRIG B mode. 
 
