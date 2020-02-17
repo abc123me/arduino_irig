@@ -69,6 +69,9 @@ uint8_t IRIG_RX::recv(irig_time_t* into) {
 		return 0;
 	unsigned long lt;
 	lt = pulseIn(pin, HIGH, timeout * 10);
+	if(lt < timeIA || lt > timeIB)
+		return 0;
+	lt = pulseIn(pin, HIGH, timeout);
 	if(lt > timeIA && lt < timeIB) {
 		_DBG_PRINTLN("recv(): init pulse");
 		uint8_t bit5 = 1, pulse = 0, dat = 0, i = 1;
