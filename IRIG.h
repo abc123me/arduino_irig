@@ -60,5 +60,6 @@ public:
 	IRIG_RX(uint8_t mode);
 	void begin(int16_t pin);
 	uint8_t recv(irig_time_t* into);
+	uint8_t recv(irig_time_t* into, uint32_t timeout_us);
 };
 #endif

@@ -64,11 +64,12 @@ void IRIG_RX::process_buf(irig_time_t* into) {
 	into->day_of_year = from_bcd(recv_buf[3]) + 100 * (recv_buf[4] & 0b11);
 	into->tenths_of_secs = recv_buf[4] >> 4;
 }
-uint8_t IRIG_RX::recv(irig_time_t* into) {
+uint8_t IRIG_RX::recv(irig_time_t* into) { return recv(into, timeout * 10); }
+uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
 	if(micros() - last_pulse < timeout)
 		return 0;
 	unsigned long lt;
-	lt = pulseIn(pin, HIGH, timeout * 10);
+	lt = pulseIn(pin, HIGH, timeout_us);
 	if(lt < timeIA || lt > timeIB)
 		return 0;
 	lt = pulseIn(pin, HIGH, timeout);
