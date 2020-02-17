@@ -5,6 +5,12 @@ Support for both IRIG A and IRIG B, however the library does not support IRIG wi
 
 ***Warning*** Some embedded processors could have trouble with IRIG A due to its 100 microsecond precision requirement, a >20MHz processor is recommended, however I have been able to rather easily generate valid IRIG A signals on a 16MHz Arduino Uno, but the board struggles to receive them with a ~30% failure rate
 
+# Installation
+```shell
+cd arduino/libraries
+git clone https://github.com/abc123me/arduino_irig.git
+```
+
 # Documentation
 ## IRIG Timecode structure
 ```cpp
