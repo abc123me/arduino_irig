@@ -140,6 +140,7 @@ void IRIG_TX::send(irig_time_t tc) {
 
 	// START FRAME
 	send_pos_ind();
+	send_pos_ind();
 	
 	// SECONDS FRAME
 	to_bcd2(tc.secs, &bcd1, &bcd10);  
