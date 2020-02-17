@@ -115,20 +115,14 @@ uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
  _/ // _, _// // /_/ /    / / / _, _/ ___ |/ /|  /___/ / /  / // /  / /    
 /___/_/ |_/___/\____/    /_/ /_/ |_/_/  |_/_/ |_//____/_/  /_/___/ /_/   */
 IRIG_TX::IRIG_TX(uint8_t mode) {
+	uint16_t mul = 1000;
 	switch(mode) {
-		case IRIG_A:
-			time0A = 200; time0B = 800;
-			time1A = 500; time1B = 500;
-			timeIA = 800; timeIB = 200;
-			ftimeMS = 100; 
-		break;
-		default:
-			time0A = 2000; time0B = 8000;
-			time1A = 5000; time1B = 5000;
-			timeIA = 8000; timeIB = 2000;
-			ftimeMS = 1000; 
-		break;
+		case IRIG_A: mul = 100; break;
 	}
+	time0A = 2 * mul; time0B = 8 * mul;
+	time1A = 5 * mul; time1B = 5 * mul;
+	timeIA = 8 * mul; timeIB = 2 * mul;
+	ftimeMS = 1 * mul; 
 }
 uint16_t IRIG_TX::getSendRate() {
 	return ftimeMS;
