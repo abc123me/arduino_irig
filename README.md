@@ -7,7 +7,7 @@ Support for both IRIG A and IRIG B, however the library does not support IRIG wi
 
 # Installation
 ```shell
-cd ~/arduino/libraries
+cd arduino/libraries
 git clone https://github.com/abc123me/arduino_irig.git
 ```
 
