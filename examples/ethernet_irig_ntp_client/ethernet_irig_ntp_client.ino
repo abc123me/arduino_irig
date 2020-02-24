@@ -37,7 +37,7 @@
 #define SEND_RATE     15000            // The rate at which IRIG packets should be sent, default 15 seconds
 
 uint8_t mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-unsigned uint16_t localPort = 8888;
+uint16_t localPort = 8888;
 #define NTP_PACKET_SIZE 48
 #define SEVENTY_YEARS 2208988800UL
 uint8_t udp_buf[NTP_PACKET_SIZE];
