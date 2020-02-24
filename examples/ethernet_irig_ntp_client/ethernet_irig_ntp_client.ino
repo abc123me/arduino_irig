@@ -34,9 +34,10 @@
 #define NTP_RATE      300              // The rate to poll the NTP server
 #define HOLDOVER_TIME 3600000          // The amount of time to work without an NTP packet, default 1 hour
 #define MAINTAIN_RATE 60000            // The rate at which the DHCP lease should me maintained, default 1 min
+#define SEND_RATE     15000            // The rate at which IRIG packets should be sent, default 15 seconds
 
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-unsigned int localPort = 8888;
+uint8_t mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+unsigned uint16_t localPort = 8888;
 #define NTP_PACKET_SIZE 48
 #define SEVENTY_YEARS 2208988800UL
 uint8_t udp_buf[NTP_PACKET_SIZE];
@@ -72,7 +73,7 @@ uint64_t txp = 0, rxp = 0;
 char buf[48];
 irig_time_t utc;
 void loop() {
-  if(millis() - last_irig_time > tx.getSendRate() && millis() < holdover_end_t) {
+  if(millis() - last_irig_time > SEND_RATE && millis() < holdover_end_t) {
     irig_time_t utc_off;
     memcpy(&utc_off, &utc, sizeof(irig_time_t));
     last_irig_time = millis();
