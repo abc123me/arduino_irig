@@ -14,6 +14,9 @@ struct irig_time_t {
 	void uptime();
 	void add_ms(uint32_t tdiff_ms);
 	void add_s(uint32_t tdiff_s);
+	void add_m(uint16_t tdiff_m);
+	void add_h(uint16_t tdiff_h);
+	void add_d(uint8_t tdiff_d);
 	uint16_t to_strn(char* str, uint16_t n);
 };
 

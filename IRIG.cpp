@@ -229,9 +229,18 @@ void irig_time_t::add_ms(uint32_t tdiff_ms) {
 	add_s(tdiff_ms / 1000);
 }
 void irig_time_t::add_s(uint32_t tdiff) {
-	day_of_year += tdiff / 86400;
-	hours += (tdiff % 86400) / 3600;
-	mins += (tdiff % 3600) / 60;
 	secs += tdiff % 60;
+	add_m(tdiff / 60);
+}
+void irig_time_t::add_m(uint16_t tdiff) {
+	mins += tdiff % 60;
+	add_h(tdiff / 60);
+}
+void irig_time_t::add_h(uint16_t tdiff) {
+	hours += tdiff % 24;
+	add_d(tdiff / 24);
+}
+void irig_time_t::add_d(uint8_t tdiff) {
+	day_of_year += tdiff;
 	fixup();
 }

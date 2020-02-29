@@ -4,6 +4,9 @@ uptime			KEYWORD2
 to_strn			KEYWORD2
 add_ms			KEYWORD2
 add_s			KEYWORD2
+add_m			KEYWORD2
+add_h			KEYWORD2
+add_d			KEYWORD2
 
 IRIG_RX			KEYWORD1
 IRIG_TX			KEYWORD1
