@@ -1,15 +1,5 @@
 #include "IRIG.h"
 
-// #define __DEBUG_IRIG
-
-#ifdef __DEBUG_IRIG
-	#define _DBG_PRINT(s) Serial.print(s);
-	#define _DBG_PRINTLN(s) Serial.println(s);
-#else
-	#define _DBG_PRINT(s)
-	#define _DBG_PRINTLN(s)
-#endif
-
 /* __  ______________    ____________  __
   / / / /_  __/  _/ /   /  _/_  __/\ \/ /
  / / / / / /  / // /    / /  / /    \  / 
@@ -66,6 +56,52 @@ void IRIG_RX::process_buf(irig_time_t* into) {
 }
 uint8_t IRIG_RX::recv(irig_time_t* into) { return recv(into, timeout * 10); }
 uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
+	_DBG_PRINTLN("recv(): enter")
+	uint64_t lt;
+	uint8_t bit5 = 1, dat = 0, i = 1;
+	uint8_t pulse = 0, last_pulse = 0, started = 0;
+	recv_buf_pos = 0;
+	do {
+		lt = pulseIn(pin, HIGH, timeout_us);
+		last_pulse = pulse;
+		if(lt > time0A && lt < time0B)
+			pulse = 0;
+		else if(lt > time1A && lt < time1B)
+			pulse = 1;
+		else if(lt > timeIA && lt < timeIB)
+			pulse = 2;
+		else if(lt == 0 && recv_buf_pos >= IRIG_MIN_FRAME_LEN)
+			goto recv;
+		if(pulse == 2) {
+			if(started) {
+				_DBG_PRINT("recv_buf[");
+				_DBG_PRINT(recv_buf_pos);
+				_DBG_PRINT("]: ");
+				_DBG_PRINTLN(dat);
+				recv_buf[recv_buf_pos++] = dat;
+				dat = 0; i = 1; bit5 = 1;
+			} else if(last_pulse == 2)
+				started = 1;
+		} else if(i == 0b10000 && bit5) { // Fuck the 5th bit, that guy always ruins the party
+			bit5 = 0;
+		} else if(started) {
+			if(pulse) dat |= i;
+			else      dat &= ~i;
+			i <<= 1;
+		}
+		last_pulse = micros();
+		if(recv_buf_pos >= IRIG_FRAME_LEN)
+			goto recv;
+		continue;
+recv:
+		process_buf(into);
+		_DBG_PRINTLN("recv(): exit recv")
+		return 1;
+	} while(micros() - last_pulse > timeout);
+	_DBG_PRINTLN("recv(): exit no recv")
+	return 0;
+}
+/*uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
 	if(micros() - last_pulse < timeout)
 		return 0;
 	unsigned long lt;
@@ -107,7 +143,7 @@ uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
 		last_pulse = micros();
 	}
 	return 0;
-}
+}*/
 
 /*    ________  __________   __________  ___    _   _______ __  _____________
    /  _/ __ \/  _/ ____/  /_  __/ __ \/   |  / | / / ___//  |/  /  _/_  __/
