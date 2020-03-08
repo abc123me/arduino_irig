@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 
+//#define __DEBUG_IRIG
 #ifdef __DEBUG_IRIG
 	#define _DBG_PRINT(s) Serial.print(s);
 	#define _DBG_PRINTLN(s) Serial.println(s);
@@ -33,7 +34,7 @@ struct irig_time_t {
 #define MS_PER_DAY		86400000
 
 #define IRIG_FRAME_LEN 5
-#define IRIG_MIN_FRAME_LEN 3
+#define IRIG_MIN_FRAME_LEN 4
 
 #define IRIG_A 0
 #define IRIG_B 1
@@ -73,5 +74,6 @@ public:
 	void begin(int16_t pin);
 	uint8_t recv(irig_time_t* into);
 	uint8_t recv(irig_time_t* into, uint32_t timeout_us);
+	uint8_t recv(irig_time_t* into, uint32_t timeout_us, uint8_t (*int_func)());
 };
 #endif

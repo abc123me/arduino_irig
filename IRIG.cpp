@@ -54,16 +54,18 @@ void IRIG_RX::process_buf(irig_time_t* into) {
 	into->day_of_year = from_bcd(recv_buf[3]) + 100 * (recv_buf[4] & 0b11);
 	into->tenths_of_secs = recv_buf[4] >> 4;
 }
-uint8_t IRIG_RX::recv(irig_time_t* into) { return recv(into, timeout * 10); }
-uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
-	_DBG_PRINTLN("recv(): enter")
-	uint64_t lt;
+uint8_t IRIG_RX::recv(irig_time_t* into) { return recv(into, timeout * 10, NULL); }
+uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) { return recv(into, timeout_us, NULL); }
+uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us, uint8_t (*int_func)()) {
+	uint64_t lt, start_time = micros();
 	uint8_t bit5 = 1, dat = 0, i = 1;
-	uint8_t pulse = 0, last_pulse = 0, started = 0;
+	uint8_t pulse = 0, lpulse = 0, started = 0;
 	recv_buf_pos = 0;
 	do {
-		lt = pulseIn(pin, HIGH, timeout_us);
-		last_pulse = pulse;
+		if(int_func && int_func()) return 0;
+		if(!started && micros() - start_time > timeout_us) break;
+		lt = pulseIn(pin, HIGH, timeout);
+		lpulse = pulse; pulse = 3;
 		if(lt > time0A && lt < time0B)
 			pulse = 0;
 		else if(lt > time1A && lt < time1B)
@@ -72,6 +74,7 @@ uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
 			pulse = 2;
 		else if(lt == 0 && recv_buf_pos >= IRIG_MIN_FRAME_LEN)
 			goto recv;
+		if(started && pulse == 3) return;
 		if(pulse == 2) {
 			if(started) {
 				_DBG_PRINT("recv_buf[");
@@ -80,7 +83,7 @@ uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
 				_DBG_PRINTLN(dat);
 				recv_buf[recv_buf_pos++] = dat;
 				dat = 0; i = 1; bit5 = 1;
-			} else if(last_pulse == 2)
+			} else if(lpulse == 2)
 				started = 1;
 		} else if(i == 0b10000 && bit5) { // Fuck the 5th bit, that guy always ruins the party
 			bit5 = 0;
@@ -89,7 +92,6 @@ uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
 			else      dat &= ~i;
 			i <<= 1;
 		}
-		last_pulse = micros();
 		if(recv_buf_pos >= IRIG_FRAME_LEN)
 			goto recv;
 		continue;
@@ -97,8 +99,7 @@ recv:
 		process_buf(into);
 		_DBG_PRINTLN("recv(): exit recv")
 		return 1;
-	} while(micros() - last_pulse > timeout);
-	_DBG_PRINTLN("recv(): exit no recv")
+	} while(1);
 	return 0;
 }
 /*uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us) {
