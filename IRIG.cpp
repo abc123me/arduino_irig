@@ -74,7 +74,7 @@ uint8_t IRIG_RX::recv(irig_time_t* into, uint32_t timeout_us, uint8_t (*int_func
 			pulse = 2;
 		else if(lt == 0 && recv_buf_pos >= IRIG_MIN_FRAME_LEN)
 			goto recv;
-		if(started && pulse == 3) return;
+		if(started && pulse == 3) return 0;
 		if(pulse == 2) {
 			if(started) {
 				_DBG_PRINT("recv_buf[");
